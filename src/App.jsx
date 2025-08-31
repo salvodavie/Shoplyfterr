@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { closestCorners, DndContext, MouseSensor, TouchSensor, useSensor, useSensors} from "@dnd-kit/core"
+import { useEffect, useState } from 'react';
+import { closestCorners, DndContext, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core"
 import { Drawer, Button, Box, Typography, } from '@mui/material';
 import './App.css';
 import List from './List';
@@ -9,7 +9,10 @@ import { arrayMove } from '@dnd-kit/sortable';
 import logo from './assets/Logo.png';
 import Snackbar from '@mui/material/Snackbar';
 
-
+  /*Local Storage*/
+  const MASTER_KEY = "shoplyfterr:savedLists";
+  const ITEMS_KEY = "shoplyfterr:itemsLists";
+  const CURRENT_KEY = "shoplyterr:curentListId";
 
 function App() {
 
@@ -20,8 +23,53 @@ function App() {
   const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false)
 
-/* List Saving, Loading, Deleting and Renaming */
 
+  /* List Saving, Loading, and Deleting*/
+
+  useEffect(() => {
+    const data = localStorage.getItem(MASTER_KEY);
+    if(!data) return;
+
+    try {
+      const parsed = JSON.parse(data)
+
+      const isValid =
+      Array.isArray(parsed) &&
+      parsed.every(item=>
+        item &&
+        typeof item === "obeject" &&
+        "id" in item &&
+        "name" in item &&
+        Array.isArray(item.items)
+      )
+
+      if(isValid){
+        setSavedLists(parsed);
+      } else {
+        console.warn("Hydration failed, error in localstorage");
+      }
+    }catch (error) {
+        console.error("Failed to parse savedLists:", error);
+      }
+    }, []);
+
+
+  function handleDeleteList(id){
+      setSavedLists(prevLists => prevLists.filter(list => list.id !== id))
+  }
+
+  function handleLoadList(id){
+    const selected = savedLists.find(list => list.id === id);
+    if(!selected || !Array.isArray(selected.items)){
+      console.warn("Invalid list, could not load", selected)
+    }
+
+    const clonedList = [...selected.items];
+
+    setItems(clonedList);
+    console.log(`"${selected.name} loaded!"`)
+    
+  }
 
   function handleSaveList(e) {
     e.preventDefault();
@@ -32,39 +80,44 @@ function App() {
       name: newList,
       items: [...items]
     }
-    
-    setSavedLists([...savedLists, listObject])
+
+    setSavedLists(prev => {
+      const next = [...prev, listObject]
+      localStorage.setItem(MASTER_KEY, JSON.stringify(next))  /*Saves into local storage */
+      return next;
+    });
+
     setSnackbarOpen(true);
     setNewList('');
     setIsSaveModalOpen(false);
   };
 
 
-  /*Add editing funciton, hover:scroll,  */
-function handleRemoveItem(id) {
-  setItems(prevItems => prevItems.filter(item => item.id !== id));
-};
-
-function handleAddItem(e) {
-  e.preventDefault();
-  if (newItem.trim() === '') return;
-
-  const itemObject = {
-    id: crypto.randomUUID(),
-    name: newItem,
+  /*Item addition, editing funciton, hover:scroll,  */
+  function handleRemoveItem(id) {
+    setItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
-  setItems([...items, itemObject]);
-  setNewItem('');
-}
+  function handleAddItem(e) {
+    e.preventDefault();
+    if (newItem.trim() === '') return;
 
-/*Dnd kit, remeber to add Phone touch compatibility*/
+    const itemObject = {
+      id: crypto.randomUUID(),
+      name: newItem,
+    };
+
+    setItems([...items, itemObject]);
+    setNewItem('');
+  }
+
+  /*Dnd kit, remeber to add Phone touch compatibility*/
   const getItemPosition = id => items.findIndex(item => item.id === id)
 
-  function handleDragEnd(event){
-    const{active, over} = event;
+  function handleDragEnd(event) {
+    const { active, over } = event;
 
-    if(active.id === over.id) return;
+    if (active.id === over.id) return;
 
     setItems(items => {
       const originalPos = getItemPosition(active.id)
@@ -75,29 +128,29 @@ function handleAddItem(e) {
   };
 
   const mouseSensor = useSensor(MouseSensor, {
-  activationConstraint: {
-    delay: 200, 
-    tolerance: 5
-  }
-});
+    activationConstraint: {
+      delay: 200,
+      tolerance: 5
+    }
+  });
 
-const touchSensor = useSensor(TouchSensor, {
-  activationConstraint: {
-    delay: 100,
-    tolerance: 5
-  }
-});
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 100,
+      tolerance: 5
+    }
+  });
 
-const sensors = useSensors(mouseSensor, touchSensor);
+  const sensors = useSensors(mouseSensor, touchSensor);
 
-/*Drawer*/
+  /*Drawer*/
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
 
-/* Modal */
+  /* Modal */
 
   const toggleModal = () => {
     setIsSaveModalOpen(prev => !prev);
@@ -109,9 +162,17 @@ const sensors = useSensors(mouseSensor, touchSensor);
         {/* Drawer trigger */}
         <Button className="menu-button" onClick={toggleDrawer(true)}>☰</Button>
 
-        <MenuDrawer toggleDrawer={toggleDrawer} drawerOpen={drawerOpen} toggleModal={toggleModal} setIsSaveModalOpen={setIsSaveModalOpen}/>
+        <MenuDrawer 
+        toggleDrawer={toggleDrawer} 
+        drawerOpen={drawerOpen} 
+        toggleModal={toggleModal} 
+        setIsSaveModalOpen={setIsSaveModalOpen} 
+        savedLists={savedLists} 
+        handleDeleteList={handleDeleteList} 
+        handleLoadList={handleLoadList}
+        />
 
-        <SaveListModal toggleModal={toggleModal} isSaveModalOpen={isSaveModalOpen} handleSaveList={handleSaveList}  newList={newList} setNewList={setNewList}/>
+        <SaveListModal toggleModal={toggleModal} isSaveModalOpen={isSaveModalOpen} handleSaveList={handleSaveList} newList={newList} setNewList={setNewList} />
 
         <Snackbar />
 

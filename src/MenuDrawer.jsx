@@ -6,7 +6,7 @@ import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
 import MenuDrawerOptions from "./MenuDrawerOptions";
 
 
-function MenuDrawer({ toggleDrawer, drawerOpen, toggleModal, }) {
+function MenuDrawer({ toggleDrawer, drawerOpen, toggleModal, savedLists, handleDeleteList, handleLoadList}) {
 
     return (
         <div>
@@ -22,7 +22,7 @@ function MenuDrawer({ toggleDrawer, drawerOpen, toggleModal, }) {
                     <ul className='menu'>
                         <li onClick={() => { toggleModal(); }}> <AssignmentAddIcon sx={{ fontSize: 30 }} />Save Current List</li>
                     </ul>
-                    <MenuDrawerOptions />
+                    <MenuDrawerOptions savedLists={savedLists} handleDeleteList={handleDeleteList} handleLoadList={handleLoadList}/>
 
 
                     <div className='logo-wrapper'>

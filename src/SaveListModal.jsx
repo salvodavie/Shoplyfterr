@@ -26,7 +26,7 @@ return(
     <Typography id="modal-modal-title" variant="h6" component="h2">
       New List
     </Typography>
-    <form className="new-list-form" onSubmit={{handleSaveList}}>
+    <form className="new-list-form" onSubmit={handleSaveList}>
       <input
         type="text"
         value={newList}

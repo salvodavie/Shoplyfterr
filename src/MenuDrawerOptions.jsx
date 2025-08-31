@@ -7,9 +7,12 @@ import Collapse from '@mui/material/Collapse';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import SettingsIcon from '@mui/icons-material/Settings';
 import GroupIcon from '@mui/icons-material/Group';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
-function MenuDrawerOptions() {
+
+function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList }) {
 
 
   const [openKey, setOpenKey] = useState(null);
@@ -27,15 +30,17 @@ function MenuDrawerOptions() {
         </ListItem>
         <Collapse in={openKey === 'saved'} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
-            <ListItem>
-              <ListItemText primary="Example 1" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Example 2" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Example 3" />
-            </ListItem>
+            {savedLists.map((list) => (
+              <ListItem key={list.name} sx={{ pl: 4 }} disablePadding
+                secondaryAction={
+                  <div>
+                    <button onClick={() => handleDeleteList(list.id)}><DeleteIcon /></button>
+                    <button onClick={() => handleLoadList(list.id)}><UploadFileIcon /></button>
+                  </div>
+                }>
+                    <ListItemText primary={list.name} />
+                  </ListItem>
+            ))}
           </List>
         </Collapse>
 
