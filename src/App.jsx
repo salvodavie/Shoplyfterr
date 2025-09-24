@@ -9,10 +9,10 @@ import { arrayMove } from '@dnd-kit/sortable';
 import logo from './assets/Logo.png';
 import Snackbar from '@mui/material/Snackbar';
 
-  /*Local Storage*/
-  const MASTER_KEY = "shoplyfterr:savedLists";
-  const ITEMS_KEY = "shoplyfterr:itemsLists";
-  const CURRENT_KEY = "shoplyterr:curentListId";
+/*Local Storage*/
+const MASTER_KEY = "shoplyfterr:savedLists";
+const ITEMS_KEY = "shoplyfterr:itemsLists";
+const CURRENT_KEY = "shoplyterr:curentListId";
 
 function App() {
 
@@ -20,55 +20,81 @@ function App() {
   const [items, setItems] = useState([]);
   const [newItem, setNewItem] = useState('');
   const [newList, setNewList] = useState('');
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [currentListId, setCurrentListId] = useState(null);
 
 
   /* List Saving, Loading, and Deleting*/
 
+  /*List modification autosave */
+  useEffect(() => {
+    if (!currentListId) return;
+
+    const t = setTimeout(() => {
+      setSavedLists(prev => {
+        const next = prev.map(list =>
+          list.id === currentListId
+            ? { ...list, items: items.map(it => ({ ...it })) }
+            : list
+        );
+        localStorage.setItem(MASTER_KEY, JSON.stringify(next));
+        return next;
+      });
+    }, 400);
+
+    return () => clearTimeout(t);
+  }, [items, currentListId]);
+
+
+  /*List Hydration*/
   useEffect(() => {
     const data = localStorage.getItem(MASTER_KEY);
-    if(!data) return;
+    if (!data) return;
 
     try {
       const parsed = JSON.parse(data)
 
       const isValid =
-      Array.isArray(parsed) &&
-      parsed.every(item=>
-        item &&
-        typeof item === "obeject" &&
-        "id" in item &&
-        "name" in item &&
-        Array.isArray(item.items)
-      )
+        Array.isArray(parsed) &&
+        parsed.every(item =>
+          item &&
+          typeof item === "obeject" &&
+          "id" in item &&1,
+          "name" in item &&
+          Array.isArray(item.items)
+        )
 
-      if(isValid){
+      if (isValid) {
         setSavedLists(parsed);
       } else {
         console.warn("Hydration failed, error in localstorage");
       }
-    }catch (error) {
-        console.error("Failed to parse savedLists:", error);
-      }
-    }, []);
+    } catch (error) {
+      console.error("Failed to parse savedLists:", error);
+    }
+  }, []);
 
 
-  function handleDeleteList(id){
-      setSavedLists(prevLists => prevLists.filter(list => list.id !== id))
+  function handleDeleteList(id) {
+    setSavedLists(prevLists => prevLists.filter(list => list.id !== id))
   }
 
-  function handleLoadList(id){
+  function handleLoadList(id) {
     const selected = savedLists.find(list => list.id === id);
-    if(!selected || !Array.isArray(selected.items)){
+    if (!selected || !Array.isArray(selected.items)) {
       console.warn("Invalid list, could not load", selected)
     }
 
     const clonedList = [...selected.items];
 
-    setItems(clonedList);
-    console.log(`"${selected.name} loaded!"`)
-    
+    setItems(selected.items.map(it => ({ ...it })));
+    setCurrentListId(selected.id)
+    setSnackbarOpen(true);
+    console.log(`"${selected.name} loaded!"`);
+    setSnackbarMessage(`"${selected.name} loaded!"`);
+
   }
 
   function handleSaveList(e) {
@@ -85,11 +111,13 @@ function App() {
       const next = [...prev, listObject]
       localStorage.setItem(MASTER_KEY, JSON.stringify(next))  /*Saves into local storage */
       return next;
-    });
-
-    setSnackbarOpen(true);
+    }
+    );
     setNewList('');
     setIsSaveModalOpen(false);
+    setSnackbarOpen(true)
+    setSnackbarMessage(`${newList} saved!`)
+    toggleDrawer(false)()
   };
 
 
@@ -105,6 +133,7 @@ function App() {
     const itemObject = {
       id: crypto.randomUUID(),
       name: newItem,
+      qty: 0
     };
 
     setItems([...items, itemObject]);
@@ -150,11 +179,38 @@ function App() {
     setDrawerOpen(open);
   };
 
+
+  /* Snackbar */
+
+  const handleCloseSnackBar = (_event, reason) => {
+    if (reason === 'clickaway') return;
+    setSnackbarOpen(false);
+  };
+
   /* Modal */
 
   const toggleModal = () => {
     setIsSaveModalOpen(prev => !prev);
   };
+
+  /*Counter functions*/
+
+  function onIncrement(id) {
+    setItems(prev =>
+      prev.map(it =>
+        it.id === id ? { ...it, qty: (it.qty ?? 0) + 1 } : it
+      )
+    );
+  }
+
+  function onDecrement(id) {
+    setItems(prev =>
+      prev.map(it =>
+        it.id === id ? { ...it, qty: Math.max(0, (it.qty ?? 0) - 1) } : it
+      )
+    );
+  }
+
 
   return (
     <>
@@ -162,19 +218,32 @@ function App() {
         {/* Drawer trigger */}
         <Button className="menu-button" onClick={toggleDrawer(true)}>☰</Button>
 
-        <MenuDrawer 
-        toggleDrawer={toggleDrawer} 
-        drawerOpen={drawerOpen} 
-        toggleModal={toggleModal} 
-        setIsSaveModalOpen={setIsSaveModalOpen} 
-        savedLists={savedLists} 
-        handleDeleteList={handleDeleteList} 
-        handleLoadList={handleLoadList}
+        <MenuDrawer
+          toggleDrawer={toggleDrawer}
+          drawerOpen={drawerOpen}
+          toggleModal={toggleModal}
+          setIsSaveModalOpen={setIsSaveModalOpen}
+          savedLists={savedLists}
+          handleDeleteList={handleDeleteList}
+          handleLoadList={handleLoadList}
         />
 
-        <SaveListModal toggleModal={toggleModal} isSaveModalOpen={isSaveModalOpen} handleSaveList={handleSaveList} newList={newList} setNewList={setNewList} />
+        <SaveListModal
+          toggleModal={toggleModal}
+          isSaveModalOpen={isSaveModalOpen}
+          handleSaveList={handleSaveList}
+          newList={newList}
+          setNewList={setNewList}
+          toggleDrawer={toggleDrawer}
+        />
 
-        <Snackbar />
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={2500}
+          message={snackbarMessage}
+          onClose={handleCloseSnackBar}
+        />
 
         <div className='logo-header'>
           <h1>ShopLyfterr</h1>
@@ -190,7 +259,13 @@ function App() {
 
 
         <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={sensors}>
-          <List items={items} handleRemoveItem={handleRemoveItem} />
+          <List
+            items={items}
+            setItems={setItems}
+            handleRemoveItem={handleRemoveItem}
+            onDecrement={onDecrement}
+            onIncrement={onIncrement}
+          />
         </DndContext>
 
       </div>
