@@ -1,5 +1,4 @@
 import React from "react"
-import { useState } from "react";
 import logo2 from './assets/LogoOrange.png';
 import { Drawer, Box, Typography, } from '@mui/material';
 import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
@@ -19,10 +18,12 @@ function MenuDrawer({ toggleDrawer, drawerOpen, toggleModal, savedLists, handleD
 
 
                     <Typography className="menu-header" variant="h6">Menu</Typography>
-                    <ul className='menu'>
-                        <li onClick={() => { toggleModal(); }}> <AssignmentAddIcon sx={{ fontSize: 30 }} />Save Current List</li>
-                    </ul>
-                    <MenuDrawerOptions savedLists={savedLists} handleDeleteList={handleDeleteList} handleLoadList={handleLoadList}/>
+                    <MenuDrawerOptions 
+                    savedLists={savedLists} 
+                    handleDeleteList={handleDeleteList} 
+                    handleLoadList={handleLoadList} 
+                    toggleModal={toggleModal}
+                    />
 
 
                     <div className='logo-wrapper'>

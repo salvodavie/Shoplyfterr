@@ -3,6 +3,7 @@
   font-family: Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding-top: .5rem;
+  padding-right: .3rem;
   box-sizing: border-box;
 }
 
@@ -203,15 +204,33 @@ input:focus {
   padding-left: 2rem;
 }
 
-.menu {
-  list-style: none;
-  padding-left: 0;
+
+.menu-drawer-options {
   color: rgb(228, 47, 11);
-  font-size: x-large;
 }
 
-li{
-  margin-bottom: .5rem;
+.secondary-actions{
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.saved-lists-icons{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: rgb(237, 120, 18);
+}
+
+.saved-lists-icons:hover{
+  color: #f84b38;
 }
 
 li:hover{
