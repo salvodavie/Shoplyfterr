@@ -60,8 +60,8 @@ function App() {
         Array.isArray(parsed) &&
         parsed.every(item =>
           item &&
-          typeof item === "obeject" &&
-          "id" in item &&1,
+          typeof item === "object" &&
+          "id" in item &&
           "name" in item &&
           Array.isArray(item.items)
         )
@@ -109,7 +109,7 @@ function App() {
 
     setSavedLists(prev => {
       const next = [...prev, listObject]
-      localStorage.setItem(MASTER_KEY, JSON.stringify(next))  /*Saves into local storage */
+      localStorage.setItem(MASTER_KEY, JSON.stringify(next));  /*Saves into local storage */
       return next;
     }
     );
