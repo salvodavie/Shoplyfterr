@@ -27,7 +27,7 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
     <div className='menu-drawer-options'>
 
       {/*Save-Current-Lists*/}
-      <List>
+      <List component="div" disablePadding>
         <ListItem button onClick={() => { toggleModal(); }}>
           <AssignmentAddIcon sx={{ fontSize: 40 }} />
           <ListItemText primary="Save Current List" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }} />
@@ -41,11 +41,11 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
         <Collapse in={openKey === 'saved'} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
             {savedLists.map((list) => (
-              <ListItem key={list.name} sx={{ pl: 4 }} disablePadding
+              <ListItem key={list.name} 
                 secondaryAction={
                   <div className='secondary-actions'>
-                    <button className='saved-lists-icons' onClick={() => handleDeleteList(list.id)}><DeleteIcon /></button>
-                    <button className='saved-lists-icons' onClick={() => handleLoadList(list.id)}><UploadFileIcon /></button>
+                    <button className='saved-lists-icons' onClick={() => handleDeleteList(list.id)}><DeleteIcon sx={{ fontSize: 35 }}/></button>
+                    <button className='saved-lists-icons' onClick={() => handleLoadList(list.id)}><UploadFileIcon sx={{ fontSize: 35 }}/></button>
                   </div>
                 }>
                 <ListItemText
@@ -70,7 +70,7 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
         <Collapse in={openKey === 'settings'} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
             <ListItem>
-              <ListItemText primary="Dark Mode" />
+              <ListItemText primary="Dark Mode" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }}/>
             </ListItem>
           </List>
         </Collapse>
@@ -83,7 +83,7 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
         <Collapse in={openKey === 'aboutUs'} timeout="auto" unmountOnExit>
           <List>
             <ListItem>
-              <ListItemText primary="Example 1" />
+              <ListItemText primary="Example 1" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }}/>
             </ListItem>
           </List>
         </Collapse>
