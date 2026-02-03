@@ -74,6 +74,10 @@ p{
   overflow: hidden;
 }
 
+.new-list-form{
+  display: flex;
+}
+
 input[type="text"] {
   font-family: 'Arial', sans-serif;
   background-color:azure;
@@ -117,6 +121,11 @@ input:focus {
   touch-action: none;
 }
 
+.item.dragging {
+  opacity: 0.7;
+}
+
+
 .item-name{
   display: flex;
   justify-content: center;
@@ -151,7 +160,6 @@ input:focus {
   justify-content: center;
   height: 2rem;
   background-color: azure;
-  gap: .1rem;
   flex-shrink: 0;
 }
 
@@ -166,7 +174,11 @@ input:focus {
   background-color: azure;
 }
 
-.quantity button{
+.quantity-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
   color: azure;
   background-color: rgb(237, 120, 18);
   font-size: 1rem;
@@ -181,11 +193,6 @@ input:focus {
 .quantity button:hover{
   cursor: pointer;
   background-color: rgb(220, 85, 12);
-}
-
-.item.dragging {
-  transform: scale(.5) ease;
-  opacity: 0.7;
 }
 
 .menu-button {
@@ -241,11 +248,3 @@ color: #f84b38;
 .MuiCollapse-root{
   padding: 0;
 }
-
-/*@media (max-width: 768px) {
-  .menu-button{
-    display: none !important;
-  }
-  
-}*/
-

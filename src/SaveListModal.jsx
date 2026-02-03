@@ -18,9 +18,11 @@ return(
       transform: 'translate(-50%, -50%)',
       bgcolor: 'background.paper',
       border: '2px solid #000',
+      borderRadius: 5,
       boxShadow: 24,
-      p: 4,
-      width: 300
+      p: 3,
+      width: 300,
+      height: 160
     }}
   >
     <Typography id="modal-modal-title" variant="h6" component="h2">

@@ -140,7 +140,7 @@ function App() {
     setNewItem('');
   }
 
-  /*Dnd kit, remeber to add Phone touch compatibility*/
+  /*Dnd kit*/
   const getItemPosition = id => items.findIndex(item => item.id === id)
 
   function handleDragEnd(event) {

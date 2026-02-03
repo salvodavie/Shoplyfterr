@@ -4,6 +4,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 
 function List({ items, handleRemoveItem, onDecrement, onIncrement }) {
     return (
+        
         <div className="list">
             <SortableContext items={(items ?? []).map(item => item.id)} strategy={verticalListSortingStrategy}>
                 {items.map((item) => (
