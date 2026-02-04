@@ -8,6 +8,7 @@ import MenuDrawer from './MenuDrawer';
 import { arrayMove } from '@dnd-kit/sortable';
 import logo from './assets/Logo.png';
 import Snackbar from '@mui/material/Snackbar';
+import AddIcon from '@mui/icons-material/Add';
 
 /*Local Storage*/
 const MASTER_KEY = "shoplyfterr:savedLists";
@@ -252,9 +253,16 @@ function App() {
         <p>Grocery Assistant</p>
         <span className='total-items'>Items:{items.length}</span>
 
-        <form className='new-item-form' onSubmit={handleAddItem}>
-          <input type="text" value={newItem} onChange={(e) => setNewItem(e.target.value)}></input>
-          <input type='submit'></input><br />
+        <form className="new-item-form" onSubmit={handleAddItem}>
+          <div className="input-group">
+            <input
+              type="text"
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+              placeholder="Add item…"
+            />
+            <button className='item-add-button' type="submit"><AddIcon /></button>
+          </div>
         </form>
 
 

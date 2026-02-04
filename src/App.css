@@ -77,39 +77,45 @@ p {
   display: flex;
 }
 
-input[type="text"] {
-  font-family: 'Arial', sans-serif;
-  background-color: azure;
-  color: black;
-  border-color: rgb(237, 120, 18);
-  border-radius: .3rem;
-  padding: 8px 12px;
-  width: 12rem;
-  height: 2rem;
+/*submit bar*/
+.input-group {
+  display: flex;
+  align-items: center;
+  background: azure;
+  border-radius: 999px;
+  padding: .25rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease;
 }
 
-input[type="submit"] {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: bold;
-  background-color: rgb(128, 36, 15);
-  color: azure;
+.input-group:focus-within {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.input-group input {
+  flex: 1;
   border: none;
-  border-radius: .2rem;
-  width: 5rem;
-  padding: .4rem;
-  margin-left: .2rem;
-}
-
-input:focus {
   outline: none;
-  border: .2rem solid #d7311f;
-  box-shadow: 0 0 0 2px rgba(255, 87, 34, 0.3);
-  transition: 0.2s ease;
+  background: transparent;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
 }
 
+.input-group button {
+  border: none;
+  color: #f84b38;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.item-add-button{
+  background-color: azure;
+}
+
+/*List Items*/
 .item {
   background-color: azure;
-  border-radius: 5px;
+  border-radius: 2rem;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 4px;
   margin: .5rem;
   padding: 1rem;
@@ -124,7 +130,6 @@ input:focus {
   opacity: 0.7;
 }
 
-
 .item-name {
   font-size: larger;
   color: black;
@@ -136,7 +141,7 @@ input:focus {
   overflow: hidden;
   text-overflow: ellipsis;
   display: flex;
-  align-items: center;   
+  align-items: center;
   min-width: 0;
   padding: 0%;
 }
@@ -197,7 +202,7 @@ input:focus {
   border-radius: 2rem;
 }
 
-.quantity-buttons{
+.quantity-buttons {
   padding: 0%;
 }
 
@@ -206,6 +211,7 @@ input:focus {
   background-color: rgb(220, 85, 12);
 }
 
+/*drawer menu*/
 .menu-button {
   display: flex !important;
   position: absolute !important;
@@ -222,7 +228,6 @@ input:focus {
   padding-left: 2rem;
 }
 
-
 .menu-drawer-options {
   color: rgb(228, 47, 11);
 }
@@ -233,7 +238,6 @@ input:focus {
   gap: .5rem;
   padding-bottom: 20px;
 }
-
 
 .saved-lists-icons {
   display: flex;
