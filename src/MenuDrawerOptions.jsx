@@ -41,19 +41,26 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
         <Collapse in={openKey === 'saved'} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
             {savedLists.map((list) => (
-              <ListItem key={list.name} 
+
+              <ListItem key={list.name}
                 secondaryAction={
                   <div className='secondary-actions'>
-                    <button className='saved-lists-icons' onClick={() => handleDeleteList(list.id)}><DeleteIcon sx={{ fontSize: 35 }}/></button>
-                    <button className='saved-lists-icons' onClick={() => handleLoadList(list.id)}><UploadFileIcon sx={{ fontSize: 35 }}/></button>
+                    <button className='saved-lists-icons' onClick={() => handleDeleteList(list.id)}><DeleteIcon sx={{ fontSize: 35 }} /></button>
+                    <button className='saved-lists-icons' onClick={() => handleLoadList(list.id)}><UploadFileIcon sx={{ fontSize: 35 }} /></button>
                   </div>
                 }>
+
                 <ListItemText
                   primary={list.name}
                   primaryTypographyProps={{
                     sx: {
                       fontSize: '1.2rem',
                       paddingBottom: '.4rem',
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                       maxWidth: 110,
+
                       "&:hover": { color: '#f84b38' }
                     }
                   }} />
@@ -70,7 +77,7 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
         <Collapse in={openKey === 'settings'} timeout="auto" unmountOnExit>
           <List component='div' disablePadding>
             <ListItem>
-              <ListItemText primary="Dark Mode" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }}/>
+              <ListItemText primary="Dark Mode" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }} />
             </ListItem>
           </List>
         </Collapse>
@@ -83,7 +90,7 @@ function MenuDrawerOptions({ savedLists, handleDeleteList, handleLoadList, toggl
         <Collapse in={openKey === 'aboutUs'} timeout="auto" unmountOnExit>
           <List>
             <ListItem>
-              <ListItemText primary="Example 1" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }}/>
+              <ListItemText primary="Example 1" primaryTypographyProps={{ sx: { fontSize: '1.2rem' } }} />
             </ListItem>
           </List>
         </Collapse>

@@ -22,7 +22,7 @@ function Item({ name, id, qty, handleRemoveItem, onDecrement, onIncrement }) {
             <DragHandleIcon {...listeners}
                 sx={{
                     fontSize: "2rem",
-                    color: "rgb(128, 36, 15)",    
+                    color: "rgb(128, 36, 15)",
                     cursor: "grab",
                     "&:hover": {
                         opacity: 1,
@@ -31,13 +31,14 @@ function Item({ name, id, qty, handleRemoveItem, onDecrement, onIncrement }) {
                         cursor: "grabbing",
                     },
                 }} />
-            <button className="remove-item" onClick={() => handleRemoveItem(id)}>×</button>
-            <span className="item-name">{name}</span>
+            <span className="item-name">
+                <span className="item-name-text">{name}</span>
+            </span>
             <Counter
                 qty={qty ?? 0}
                 onIncrement={() => onIncrement(id)}
                 onDecrement={() => onDecrement(id)}
-            />
+            />            <button className="remove-item" onClick={() => handleRemoveItem(id)}>×</button>
         </div>
     );
 };
